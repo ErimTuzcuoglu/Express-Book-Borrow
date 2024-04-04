@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+  app:
+    build: .
+    environment:
+      - PORT=3000
+      - JWT_SECRET=secret
+      - TYPEORM_CONNECTION=postgres
+      - TYPEORM_HOST=localhost
+      - TYPEORM_PORT=5432
+      - TYPEORM_DATABASE=invent_analytics_library
+    ports:
+      - "3000:3000"
+    links:
+      - postgres
+    networks:
+      - internal
+
+  postgres:
+    image: postgres:15.1
+    ports:
+      - 5432:5432
+    volumes:
+      - /data/postgres:/data/postgres
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge
