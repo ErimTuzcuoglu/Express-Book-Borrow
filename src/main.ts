@@ -1,6 +1,7 @@
 import * as express from 'express';
 import config from './config';
 import loaders from './loaders';
+import "reflect-metadata";
 
 async function main() {
   const app = express.default();

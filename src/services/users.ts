@@ -1,18 +1,21 @@
-import { Service } from 'typedi';
-import { DataSource, FindOneOptions, Repository } from 'typeorm';
-import { Container } from 'typeorm-typedi-extensions';
+import { DataSource, Repository } from 'typeorm';
+import { injectable } from 'inversify';
 import { Book, Borrow, User } from '../models';
+/* #region IOC */
+import { iocContainer } from '../config/ioc.container';
+import { TYPES } from '../types/contract-types';
+/* #endregion */
 
-@Service()
+@injectable()
 export default class UserService {
   private readonly userRepository: Repository<User>;
   private readonly borrowRepository: Repository<Borrow>;
   private readonly bookRepository: Repository<Book>;
 
   constructor() {
-    this.userRepository = Container.get(DataSource).getRepository(User);
-    this.bookRepository = Container.get(DataSource).getRepository(Book);
-    this.borrowRepository = Container.get(DataSource).getRepository(Borrow);
+    this.userRepository = iocContainer.get<DataSource>(TYPES.DataSource).getRepository(User);
+    this.bookRepository = iocContainer.get<DataSource>(TYPES.DataSource).getRepository(Book);
+    this.borrowRepository = iocContainer.get<DataSource>(TYPES.DataSource).getRepository(Borrow);
   }
 
   public async findAll(): Promise<User[]> {

@@ -1,7 +1,5 @@
-import Container from 'typedi';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import path from 'path';
-import { DataSource } from 'typeorm';
 import config from '../config';
 import { Book, Borrow, User } from '../models';
 
@@ -19,9 +17,6 @@ export default (): PostgresConnectionOptions => {
     migrations: [`${path.join(__dirname, '../', 'migrations')}/*{.ts,.js}`],
     migrationsRun: false,
   };
-
-  // typedi + typeorm
-  Container.set(DataSource, new DataSource(connectionOptions));
 
   return connectionOptions;
 };

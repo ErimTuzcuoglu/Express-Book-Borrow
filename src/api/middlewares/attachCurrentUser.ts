@@ -1,5 +1,8 @@
-import { Container } from 'typedi';
-import UserService from '../../services/users';
+/* #region IOC */
+import { iocContainer } from '../../config/ioc.container';
+import { IUserService } from '../../services/contracts/users';
+import { TYPES } from '../../types/contract-types';
+/* #endregion */
 
 /**
  * Attach user to req.user
@@ -9,7 +12,7 @@ import UserService from '../../services/users';
  */
 const attachCurrentUser = async (req, res, next) => {
   try {
-    const userServiceInstance = Container.get(UserService);
+    const userServiceInstance = iocContainer.get<IUserService>(TYPES.IUserService);
     const userRecord = await userServiceInstance.findOneById(req.auth.id);
     if (!userRecord) {
       return res.sendStatus(401);

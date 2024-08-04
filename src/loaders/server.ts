@@ -3,20 +3,27 @@ import { errors, celebrate, isCelebrateError } from 'celebrate';
 import cors from 'cors';
 import * as express from 'express';
 import helmet from 'helmet';
+/* #region Swagger */
+import swaggerUi from 'swagger-ui-express';
+const swaggerDocument = require('../util/swagger/build/swagger.json');
+/* #endregion */
 import routes from '../api/routes';
-import swagger from '../api/routes/swagger';
 
 export default (app: express.Application) => {
-  app.enable('trust proxy');
-  app.use(cors());
-  app.use(helmet());
-  app.use(bodyParser.json());
-  app.use(errors());
-  swagger(app);
+  app
+  .enable('trust proxy')
+  .use(cors())
+  .use(helmet())
+  .use(bodyParser.json())
+  .use(errors());
+
+  /* #region Swagger */
+  app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  /* #endregion */
   app.use(routes);
 
   /// catch 404 and forward to error handler
-  app.use((req, res, next) => {
+  app.use((err, req, res, next) => {
     const error: Error = new Error('Not Found');
     error['status'] = 404;
     next(error);

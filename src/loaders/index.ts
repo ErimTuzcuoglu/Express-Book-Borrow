@@ -1,13 +1,14 @@
 import * as express from 'express';
-import 'reflect-metadata';
-import database from './database';
-import server from './server';
 import { DataSource } from 'typeorm';
-import Container from 'typedi';
+import 'reflect-metadata';
+import server from './server';
+/* #region IOC */
+import { iocContainer } from '../config/ioc.container';
+import { TYPES } from '../types/contract-types';
+/* #endregion */
 
 export default async (app: express.Application) => {
-  database();
-  await (Container.get(DataSource)).initialize();
+  await iocContainer.get<DataSource>(TYPES.DataSource).initialize();
   console.log('DB loaded and connected!');
 
   await server(app);

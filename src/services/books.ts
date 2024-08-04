@@ -1,13 +1,15 @@
-import { Service } from 'typedi';
-import { DataSource, FindOneOptions, Repository } from 'typeorm';
-import { Container } from 'typeorm-typedi-extensions';
+import { DataSource, Repository } from 'typeorm';
+import { injectable } from 'inversify';
+import { IBookService } from './contracts/books';
 import { Book } from '../models';
+import { iocContainer } from '../config/ioc.container';
+import { TYPES } from '../types/contract-types';
 
-@Service()
-export default class BookService {
+@injectable()
+export default class BookService implements IBookService {
   private readonly bookRepository: Repository<Book>;
   constructor() {
-    this.bookRepository = Container.get(DataSource).getRepository(Book);
+    this.bookRepository = iocContainer.get<DataSource>(TYPES.DataSource).getRepository(Book);
   }
 
   public async findAll(): Promise<Book[]> {
